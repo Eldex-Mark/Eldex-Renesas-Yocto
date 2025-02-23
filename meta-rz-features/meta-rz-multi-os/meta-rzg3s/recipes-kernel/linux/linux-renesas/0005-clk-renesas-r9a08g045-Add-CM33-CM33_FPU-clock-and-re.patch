@@ -1,0 +1,69 @@
+diff --git a/drivers/clk/renesas/r9a08g045-cpg.c b/drivers/clk/renesas/r9a08g045-cpg.c
+index 33a204fbe25c..dcd6cbf800f0 100644
+--- a/drivers/clk/renesas/r9a08g045-cpg.c
++++ b/drivers/clk/renesas/r9a08g045-cpg.c
+@@ -297,6 +297,10 @@ static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
+ 	DEF_MOD("i3c_tclk",		R9A08G045_I3C_TCLK, R9A08G045_CLK_P5, 0x610, 1, MSTOP(MCPU3_MSTOP, BIT(10))),
+ 	DEF_MOD("i3c_pclk",		R9A08G045_I3C_PCLK, R9A08G045_CLK_TSU, 0x610, 0, 0),
+ 	DEF_MOD("vbat_bclk",		R9A08G045_VBAT_BCLK, R9A08G045_OSCCLK, 0x614, 0, MSTOP(MCPU3_MSTOP, BIT(8))),
++	DEF_MOD("cm33_clkin",		R9A08G045_CM33_CLKIN, R9A08G045_CLK_I2, 0x504, 0, 0),
++	DEF_MOD("cm33_tsclk",		R9A08G045_CM33_TSCLK, R9A08G045_OSCCLK, 0x504, 1, 0),
++	DEF_MOD("cm33_fpu_clkin",	R9A08G045_CM33_FPU_CLKIN, R9A08G045_CLK_I3, 0x504, 8, 0),
++	DEF_MOD("cm33_fpu_tsclk",	R9A08G045_CM33_FPU_TSCLK, R9A08G045_OSCCLK, 0x504, 9, 0),
+ };
+ 
+ static const struct rzg2l_reset r9a08g045_resets[] = {
+@@ -373,6 +377,12 @@ static const struct rzg2l_reset r9a08g045_resets[] = {
+ 	DEF_RST(R9A08G045_I3C_TRESETN, 0x910, 0),
+ 	DEF_RST(R9A08G045_I3C_PRESETN, 0x910, 1),
+ 	DEF_RST(R9A08G045_VBAT_BRESETN, 0x914, 0),
++	DEF_RST(R9A08G045_CM33_NPORESET, 0x804, 0),
++	DEF_RST(R9A08G045_CM33_NSYSRESET, 0x804, 1),
++	DEF_RST(R9A08G045_CM33_MISCRESETN, 0x804, 2),
++	DEF_RST(R9A08G045_CM33_FPU_NPORESET, 0x804, 8),
++	DEF_RST(R9A08G045_CM33_FPU_NSYSRESET, 0x804, 9),
++	DEF_RST(R9A08G045_CM33_FPU_MISCRESETN, 0x804, 10),
+ };
+ 
+ static const unsigned int r9a08g045_crit_mod_clks[] __initconst = {
+@@ -397,11 +407,11 @@ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	/* Module Clocks */
+ 	.mod_clks = r9a08g045_mod_clks,
+ 	.num_mod_clks = ARRAY_SIZE(r9a08g045_mod_clks),
+-	.num_hw_mod_clks = R9A08G045_VBAT_BCLK + 1,
++	.num_hw_mod_clks = R9A08G045_CM33_FPU_TSCLK + 1,
+ 
+ 	/* Resets */
+ 	.resets = r9a08g045_resets,
+-	.num_resets = R9A08G045_VBAT_BRESETN + 1, /* Last reset ID + 1 */
++	.num_resets = R9A08G045_CM33_FPU_MISCRESETN + 1, /* Last reset ID + 1 */
+ 
+ 	.has_clk_mon_regs = true,
+ };
+diff --git a/include/dt-bindings/clock/r9a08g045-cpg.h b/include/dt-bindings/clock/r9a08g045-cpg.h
+index ec09881b7810..91eddb9b0895 100644
+--- a/include/dt-bindings/clock/r9a08g045-cpg.h
++++ b/include/dt-bindings/clock/r9a08g045-cpg.h
+@@ -143,6 +143,10 @@
+ #define R9A08G045_I3C_PCLK		104
+ #define R9A08G045_I3C_TCLK		105
+ #define R9A08G045_VBAT_BCLK		106
++#define R9A08G045_CM33_CLKIN		107
++#define R9A08G045_CM33_TSCLK		108
++#define R9A08G045_CM33_FPU_CLKIN	109
++#define R9A08G045_CM33_FPU_TSCLK	110
+ 
+ /* R9A08G045 Resets */
+ #define R9A08G045_CA55_RST_1_0		0
+@@ -239,5 +243,11 @@
+ #define R9A08G045_I3C_TRESETN		91
+ #define R9A08G045_I3C_PRESETN		92
+ #define R9A08G045_VBAT_BRESETN		93
++#define R9A08G045_CM33_NPORESET	94
++#define R9A08G045_CM33_NSYSRESET	95
++#define R9A08G045_CM33_MISCRESETN	96
++#define R9A08G045_CM33_FPU_NPORESET	97
++#define R9A08G045_CM33_FPU_NSYSRESET	98
++#define R9A08G045_CM33_FPU_MISCRESETN	99
+ 
+ #endif /* __DT_BINDINGS_CLOCK_R9A08G045_CPG_H__ */

@@ -1,0 +1,50 @@
+From 4996b8d944bfd047cb271fea24cf41aa83f840c0 Mon Sep 17 00:00:00 2001
+From: trungvanle <trung.le.xk@renesas.com>
+Date: Mon, 1 Jul 2024 17:28:00 +0700
+Subject: [PATCH] rz-common: gst-plugins-bad: Depending bayer2raw if layer
+ meta-rz-graphics is added
+
+Currently, a build error occurs when building gstreamer-plugins-bad without the
+meta-rz-features/meta-rz-graphics layer. This error is caused by the bayer2raw
+recipe, which lacks the EGL/eglext_REL.h header file. To resolve this issue,
+add a judgement to check whether the meta-rz-graphics layer is included or not.
+If it is not included, exclude the bayer2raw, bayerconver and bayersink.
+
+Note: This update apply for both G2 series and G2L series.
+
+Signed-off-by: trungvanle <trung.le.xk@renesas.com>
+---
+ .../gstreamer/gstreamer1.0-plugins-bad_1.16.3.bbappend    | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/meta-rz-common/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_1.16.3.bbappend b/meta-rz-common/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_1.16.3.bbappend
+index 44c95183..b0ec1ff4 100644
+--- a/meta-rz-common/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_1.16.3.bbappend
++++ b/meta-rz-common/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_1.16.3.bbappend
+@@ -10,19 +10,19 @@ SRC_URI_append = " \
+     file://0004-waylandsink-Add-mising-code-for-scale-feature.patch \
+     file://0005-gstreamer-waylandsink-disable-subsurface-in-fullscre.patch \
+     file://0006-waylandsink-Add-support-for-I420-in-dmabuf.patch \
+-    ${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', 'file://0007-New-libbayersink-Bayer-to-RAW-converter-and-display-.patch', '', d)} \
+-    ${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', 'file://0008-ext-bayerconvert-add-bayerconvert-plugin.patch', '', d)} \
++    ${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', bb.utils.contains('BBFILE_COLLECTIONS', 'rz-graphics', 'file://0007-New-libbayersink-Bayer-to-RAW-converter-and-display-.patch', '', d), '', d)} \
++    ${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', bb.utils.contains('BBFILE_COLLECTIONS', 'rz-graphics', 'file://0008-ext-bayerconvert-add-bayerconvert-plugin.patch', '', d), '', d)} \
+  "
+ 
+ SRC_URI_append_rzg2l = " \
+     file://0001-gstreamer-waylandsink-Add-stride-restriction-to-buff.patch \
+-    file://0002-ext-bayersink-Remove-EGL_PIXMAP_BIT-while-using-mali.patch \
++    ${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', bb.utils.contains('BBFILE_COLLECTIONS', 'rz-graphics', 'file://0002-ext-bayersink-Remove-EGL_PIXMAP_BIT-while-using-mali.patch', '', d), '', d)} \
+ "
+ 
+ SRCREV_base = "3ef17d3c57e12f9d7536e464656b871a8949fa5b"
+ 
+ DEPENDS += "weston virtual/libgles2 mmngr-user-module mmngrbuf-user-module"
+-DEPENDS += "${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', 'bayer2raw', '', d)}"
++DEPENDS += "${@bb.utils.contains('MACHINE_FEATURES', 'bayer2raw', bb.utils.contains('BBFILE_COLLECTIONS', 'rz-graphics', 'bayer2raw', '', d), '', d)}"
+ 
+ 
+ S = "${WORKDIR}/git"
+-- 
+2.25.1
+

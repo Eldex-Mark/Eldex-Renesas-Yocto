@@ -1,0 +1,3 @@
+PV="r47"
+
+MALI_VERSION = "v1.2.2"

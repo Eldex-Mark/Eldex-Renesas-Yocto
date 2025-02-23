@@ -1,0 +1,29 @@
+diff --git a/arch/arm64/boot/dts/renesas/rzg2lc-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg2lc-smarc-som.dtsi
+index 340096c21749..87c1f05b293d 100644
+--- a/arch/arm64/boot/dts/renesas/rzg2lc-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg2lc-smarc-som.dtsi
+@@ -39,6 +39,24 @@ mmp_reserved: linux,multimedia {
+ 			reusable;
+ 			reg = <0x00000000 0x68000000 0x0 0x8000000>;
+ 		};
++
++		vdev0vring0: vdev0vring0@0x43000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x43000000 0x0 0x50000>;
++			no-map;
++		};
++
++		vdev0vring1: vdev0vring1@0x43050000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x43050000 0x0 0x50000>;
++			no-map;
++		};
++
++		vdev0buffer: vdev0buffer@0x43200000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x43200000 0x0 0x300000>;
++			no-map;
++		};
+ 	};
+ 
+ 	mmngr {

@@ -1,0 +1,32 @@
+From 4061d967c62ee6a1ea05eae405875ce45a1481a3 Mon Sep 17 00:00:00 2001
+From: Huy Nguyen <huy.nguyen.wh@renesas.com>
+Date: Fri, 12 Apr 2024 09:38:45 +0700
+Subject: [PATCH] virtualization-layer: docker-ce: Fix issue conflict system
+
+The sysvinit functionality conflicts with the docker daemon
+settings required for the systemd docker.socket.
+
+Ensure that the sysvinit capabilities are only enabled if
+systemd is not present.
+
+Refer: https://git.yoctoproject.org/meta-virtualization/commit/?id=f6bf30aca6cb16f4fe185965f56e4e59dd7848f8
+
+Signed-off-by: Huy Nguyen <huy.nguyen.wh@renesas.com>
+---
+ .../virtualization-layer/docker/docker-ce_git.bbappend      | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/meta-rz-common/dynamic-layers/virtualization-layer/docker/docker-ce_git.bbappend b/meta-rz-common/dynamic-layers/virtualization-layer/docker/docker-ce_git.bbappend
+index 8d7b829199..53c2f3ce1a 100644
+--- a/meta-rz-common/dynamic-layers/virtualization-layer/docker/docker-ce_git.bbappend
++++ b/meta-rz-common/dynamic-layers/virtualization-layer/docker/docker-ce_git.bbappend
+@@ -1,4 +1,2 @@
+-do_install_append() {
+-	install -d ${D}${sysconfdir}/init.d
+-	install -m 0755 ${WORKDIR}/docker.init ${D}${sysconfdir}/init.d/docker.init
+-}
++INITSCRIPT_PACKAGES = "${@bb.utils.contains('DISTRO_FEATURES','systemd','', '${PN}',d)}"
++INITSCRIPT_NAME:${PN} = "${@bb.utils.contains('DISTRO_FEATURES','systemd','', 'docker.init',d)}"
+-- 
+2.25.1
+
