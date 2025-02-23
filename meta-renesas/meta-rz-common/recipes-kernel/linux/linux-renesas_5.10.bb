@@ -20,9 +20,15 @@ COMPATIBLE_MACHINE_rzg3s = "(rzg3s-dev|smarc-rzg3s)"
 #LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 #LINUX_VERSION ?= "${@oe.utils.conditional("IS_RT_BSP", "1", "5.10.201-cip41-rt17", "5.10.201-cip41",d)}"
 
+#SRC_URI += "\
+#      git://github.com/Eldex-Mark/rz_linux-cip-rz-5.10-cip41-rt17.git;protocol=https;nocheckout=1;branch=main"
+#SRCREV= "b4aeb5713716ad1943189ab744f0454e1714d0bf"
+
+# Compile local version
 SRC_URI += "\
-      https://github.com/Eldex-Mark/rz_linux-cip-rz-5.10-cip41-rt17.git/;protocol=file;branch=main"
-SRCREV= "a5a934bbaafcb6e1e1af5d4f7a463fe5421ffe48"
+      git:///home/mark/rz_linux-cip-rz-5.10-cip41-rt17/;protocol=file;branch=main"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b4aeb5713716ad1943189ab744f0454e1714d0bf"
+SRCREV= "b4aeb5713716ad1943189ab744f0454e1714d0bf"
 
 LINUX_VERSION = "5.10.201"
 
