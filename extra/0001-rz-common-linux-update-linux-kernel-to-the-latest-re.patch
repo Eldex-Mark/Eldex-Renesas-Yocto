@@ -1,0 +1,45 @@
+From 4ba2b531f4e9db85ffbd94e2df35bf6e1a6a1aad Mon Sep 17 00:00:00 2001
+From: Hien Huynh <hien.huynh.px@renesas.com>
+Date: Wed, 12 Jun 2024 21:08:55 +0700
+Subject: [PATCH] rz-common: linux: update linux kernel to the latest revision
+
+Update linux kernel to the latest revision to fix below issues:
+- RZ/G2L Series, RZ/V2L and RZ/Five: no sound for 48Khz rate.
+- Add condition for RZ/G2L's PLL setting for display clock to let
+low resolutions work normally.
+
+Signed-off-by: Hien Huynh <hien.huynh.px@renesas.com>
+---
+ .../linux-libc-headers/linux-libc-headers_5.10.bb               | 2 +-
+ meta-rz-common/recipes-kernel/linux/linux-renesas_5.10.bb       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/meta-rz-common/recipes-kernel/linux-libc-headers/linux-libc-headers_5.10.bb b/meta-rz-common/recipes-kernel/linux-libc-headers/linux-libc-headers_5.10.bb
+index c08e628357..1636e9b992 100644
+--- a/meta-rz-common/recipes-kernel/linux-libc-headers/linux-libc-headers_5.10.bb
++++ b/meta-rz-common/recipes-kernel/linux-libc-headers/linux-libc-headers_5.10.bb
+@@ -3,7 +3,7 @@ require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
+ KERNEL_URL = " \
+     git://github.com/renesas-rz/rz_linux-cip.git"
+ BRANCH = "${@oe.utils.conditional("IS_RT_BSP", "1", "rz-5.10-cip41-rt17", "rz-5.10-cip41",d)}"
+-SRCREV = "${@oe.utils.conditional("IS_RT_BSP", "1", "ca73c38c8cc9f885d71d7aa3e4c492e3138305fb", "0db7a90de0883e06da1aa5554bc2ec17a5f89545",d)}"
++SRCREV = "${@oe.utils.conditional("IS_RT_BSP", "1", "13d833431c8f69b225e3bb94cb72b06774fd47c0", "0030c60827fe590e8dbdfe58a9844328b9e28b9a",d)}"
+ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
+ 
+ SRC_URI = "${KERNEL_URL};branch=${BRANCH}"
+diff --git a/meta-rz-common/recipes-kernel/linux/linux-renesas_5.10.bb b/meta-rz-common/recipes-kernel/linux/linux-renesas_5.10.bb
+index 3d5c1f0020..cacbe7ae47 100644
+--- a/meta-rz-common/recipes-kernel/linux/linux-renesas_5.10.bb
++++ b/meta-rz-common/recipes-kernel/linux/linux-renesas_5.10.bb
+@@ -14,7 +14,7 @@ COMPATIBLE_MACHINE_rzg3s = "(rzg3s-dev|smarc-rzg3s)"
+ KERNEL_URL = " \
+     git://github.com/renesas-rz/rz_linux-cip.git"
+ BRANCH = "${@oe.utils.conditional("IS_RT_BSP", "1", "rz-5.10-cip41-rt17", "rz-5.10-cip41",d)}"
+-SRCREV = "${@oe.utils.conditional("IS_RT_BSP", "1", "ca73c38c8cc9f885d71d7aa3e4c492e3138305fb", "0db7a90de0883e06da1aa5554bc2ec17a5f89545",d)}"
++SRCREV = "${@oe.utils.conditional("IS_RT_BSP", "1", "13d833431c8f69b225e3bb94cb72b06774fd47c0", "0030c60827fe590e8dbdfe58a9844328b9e28b9a",d)}"
+ 
+ SRC_URI = "${KERNEL_URL};protocol=https;nocheckout=1;branch=${BRANCH}"
+ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
+-- 
+2.25.1
+

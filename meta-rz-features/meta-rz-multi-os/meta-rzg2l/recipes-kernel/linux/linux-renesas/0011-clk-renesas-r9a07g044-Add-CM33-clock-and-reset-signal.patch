@@ -1,0 +1,70 @@
+diff --git a/drivers/clk/renesas/r9a07g044-cpg.c b/drivers/clk/renesas/r9a07g044-cpg.c
+index c21efb04634e..b0b6f546a38a 100644
+--- a/drivers/clk/renesas/r9a07g044-cpg.c
++++ b/drivers/clk/renesas/r9a07g044-cpg.c
+@@ -212,7 +212,7 @@ static const struct {
+ };
+ 
+ static const struct {
+-	struct rzg2l_mod_clk common[87];
++	struct rzg2l_mod_clk common[89];
+ #ifdef CONFIG_CLK_R9A07G054
+ 	struct rzg2l_mod_clk drp[5];
+ #endif
+@@ -323,6 +323,10 @@ static const struct {
+ 					0x56C, 0, 0),
+ 		DEF_MOD("lcdc_clkd",	R9A07G044_LCDC_CLK_D, R9A07G044_CLK_M3,
+ 					0x56C, 1, 0),
++		DEF_MOD("cm33_clkin",  R9A07G044_CM33_CLKIN, R9A07G044_CLK_I2,
++					0x504, 0, 0),
++		DEF_MOD("cm33_tsclk",  R9A07G044_CM33_TSCLK, R9A07G044_OSCCLK,
++					0x504, 1, 0),
+ 		DEF_MOD("ssi0_pclk",	R9A07G044_SSI0_PCLK2, R9A07G044_CLK_P0,
+ 					0x570, 0, MSTOP(MCPU1_MSTOP, BIT(10))),
+ 		DEF_MOD("ssi0_sfr",	R9A07G044_SSI0_PCLK_SFR, R9A07G044_CLK_P0,
+@@ -483,6 +487,9 @@ static struct rzg2l_reset r9a07g044_resets[] = {
+ 	DEF_RST(R9A07G044_ADC_ADRST_N, 0x8a8, 1),
+ 	DEF_RST(R9A07G044_TSU_PRESETN, 0x8ac, 0),
+ 	DEF_RST(R9A07G054_STPAI_ARESETN, 0x8E8, 0),
++	DEF_RST(R9A07G044_CM33_NPORESET, 0x804, 0),
++	DEF_RST(R9A07G044_CM33_NSYSRESET, 0x804, 1),
++	DEF_RST(R9A07G044_CM33_MISCRESETN, 0x804, 2),
+ };
+ 
+ static const unsigned int r9a07g044_crit_mod_clks[] __initconst = {
+@@ -507,11 +514,11 @@ const struct rzg2l_cpg_info r9a07g044_cpg_info = {
+ 	/* Module Clocks */
+ 	.mod_clks = mod_clks.common,
+ 	.num_mod_clks = ARRAY_SIZE(mod_clks.common),
+-	.num_hw_mod_clks = R9A07G044_TSU_PCLK + 1,
++	.num_hw_mod_clks = R9A07G044_CM33_TSCLK + 1,
+ 
+ 	/* Resets */
+ 	.resets = r9a07g044_resets,
+-	.num_resets = R9A07G044_TSU_PRESETN + 1, /* Last reset ID + 1 */
++	.num_resets = R9A07G044_CM33_MISCRESETN + 1, /* Last reset ID + 1 */
+ 
+ 	.has_clk_mon_regs = true,
+ };
+diff --git a/include/dt-bindings/clock/r9a07g044-cpg.h b/include/dt-bindings/clock/r9a07g044-cpg.h
+index 0bb17ff1a01a..31f3f7429e96 100644
+--- a/include/dt-bindings/clock/r9a07g044-cpg.h
++++ b/include/dt-bindings/clock/r9a07g044-cpg.h
+@@ -130,6 +130,8 @@
+ #define R9A07G044_ADC_ADCLK		94
+ #define R9A07G044_ADC_PCLK		95
+ #define R9A07G044_TSU_PCLK		96
++#define R9A07G044_CM33_CLKIN            97
++#define R9A07G044_CM33_TSCLK            98
+ 
+ /* R9A07G044 Resets */
+ #define R9A07G044_CA55_RST_1_0		0
+@@ -216,5 +218,8 @@
+ #define R9A07G044_ADC_PRESETN		81
+ #define R9A07G044_ADC_ADRST_N		82
+ #define R9A07G044_TSU_PRESETN		83
++#define R9A07G044_CM33_NPORESET         84
++#define R9A07G044_CM33_NSYSRESET        85
++#define R9A07G044_CM33_MISCRESETN       86
+ 
+ #endif /* __DT_BINDINGS_CLOCK_R9A07G044_CPG_H__ */

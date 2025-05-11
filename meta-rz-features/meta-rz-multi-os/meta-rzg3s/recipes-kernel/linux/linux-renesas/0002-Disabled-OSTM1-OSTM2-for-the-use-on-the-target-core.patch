@@ -1,0 +1,30 @@
+From a4daea0fdefa6885a63a3ef26eaf665262d21fcb Mon Sep 17 00:00:00 2001
+From: vong le <vong.le.xf@renesas.com>
+Date: Fri, 29 Mar 2024 16:38:01 +0700
+Subject: [PATCH 2/8] Diasbled OSTM1 OSTM2 for the use on the target core
+
+---
+ arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+index 07cc98d12071..4b915007ae84 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+@@ -236,11 +236,11 @@ &ostm0 {
+ };
+ 
+ &ostm1 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &ostm2 {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &ostm3 {
+-- 
+2.25.1
+
